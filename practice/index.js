@@ -4,7 +4,7 @@ const quotesLibrary = require('./lib/quotes');
 const app = {};
 
 app.config = {
-    timeBetweenQuotes: 2000,
+    timeBetweenQuotes: 1000,
 };
 
 app.printAQuotes = function printAQuotes() {
@@ -17,10 +17,10 @@ app.printAQuotes = function printAQuotes() {
     const selectQuotes = allQuotes[randomNumber - 1];
 
     console.log(selectQuotes);
+    return selectQuotes;
 };
 
 app.infiniteLoop = function infiniteLoop() {
     setInterval(app.printAQuotes, app.config.timeBetweenQuotes);
 };
-
-app.infiniteLoop();
+module.exports = app;
