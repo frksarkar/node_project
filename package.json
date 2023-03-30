@@ -1,6 +1,10 @@
 {
+  "main": "index.js",
+  "author": "faruk sarkar",
+  "license": "ISC",
   "scripts": {
-    "start": "nodemon index"
+    "start": "NODE_ENV=development nodemon ./practice_project_02/index.js",
+    "production": "NODE_ENV=production nodemon ./practice_project_02/index.js"
   },
   "devDependencies": {
     "eslint": "^8.36.0",
