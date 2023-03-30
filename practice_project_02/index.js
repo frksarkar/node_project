@@ -7,6 +7,7 @@
 
 // dependencies
 const http = require('http');
+const environment = require('./helpers/environments');
 
 const { handleReqRes } = require('./helpers/handleReqRes');
 
@@ -14,9 +15,7 @@ const { handleReqRes } = require('./helpers/handleReqRes');
 const app = {};
 
 // configuration
-app.config = {
-    port: 3000,
-};
+app.config = environment;
 
 app.createServer = () => {
     const server = http.createServer(app.handleRequest);
