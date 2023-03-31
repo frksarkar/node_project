@@ -17,6 +17,7 @@ lib.baseDir = path.join(__dirname, '../.data/');
 // write data files
 lib.create = (directory, fileName, data, callback) => {
     fs.open(`${lib.baseDir + directory}/${fileName}.json`, 'wx', (error, fileDescriptor) => {
+        console.log(fileDescriptor);
         if (!error && fileDescriptor) {
             // convert data to json format.
             const stringData = JSON.stringify(data);
@@ -37,6 +38,18 @@ lib.create = (directory, fileName, data, callback) => {
             });
         } else {
             callback("Couldn't create data file, it was already created.");
+        }
+    });
+};
+
+// read data from file.
+lib.read = (directory, fileName, callback) => {
+    fs.readFile(`${lib.baseDir + directory}/${fileName}.json`, 'utf-8', (error, data) => {
+        if (!error) {
+            // empty
+            callback(data);
+        } else {
+            callback(error);
         }
     });
 };
