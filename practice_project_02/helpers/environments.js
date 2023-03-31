@@ -23,12 +23,10 @@ environments.production = {
 };
 
 // determine which environments are passed
-const currentEnvironments =
-    typeof process.env.NODE_ENV === 'string' ? process.env.NODE_ENV : 'development';
+const currentEnvironments =    typeof process.env.NODE_ENV === 'string' ? process.env.NODE_ENV : 'development';
 
 // export corresponding environment object
-const environmentToExport =
-    typeof environments[currentEnvironments] === 'object'
+const environmentToExport =    typeof environments[currentEnvironments] === 'object'
         ? environments[currentEnvironments]
         : environments.development;
 
