@@ -17,7 +17,6 @@ lib.baseDir = path.join(__dirname, '../.data/');
 // write data files
 lib.create = (directory, fileName, data, callback) => {
     fs.open(`${lib.baseDir + directory}/${fileName}.json`, 'wx', (error, fileDescriptor) => {
-        console.log(fileDescriptor);
         if (!error && fileDescriptor) {
             // convert data to json format.
             const stringData = JSON.stringify(data);
@@ -50,6 +49,31 @@ lib.read = (directory, fileName, callback) => {
             callback(data);
         } else {
             callback(error);
+        }
+    });
+};
+
+// update data from file.
+lib.update = (directory, fileName, data, callback) => {
+    fs.open(`${lib.baseDir + directory}/${fileName}.json`, 'r+', (error, fileDescriptor) => {
+        if (!error && fileDescriptor) {
+            const json = JSON.stringify(data);
+
+            fs.writeFile(fileDescriptor, json, (error1) => {
+                if (!error1) {
+                    fs.close(fileDescriptor, (error2) => {
+                        if (!error2) {
+                            callback('file successful open');
+                        } else {
+                            callback('Error closing the file');
+                        }
+                    });
+                } else {
+                    callback('Error writing a file');
+                }
+            });
+        } else {
+            callback('Error opening file');
         }
     });
 };
