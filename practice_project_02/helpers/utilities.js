@@ -26,11 +26,10 @@ utilities.parseJSON = (jsonString) => {
 // hash string
 utilities.hash = (str) => {
     if (typeof str === 'string' && str.length > 0) {
-        // todo
         const hash = crypto
             .createHash('sha256', environmentToExport.secretKey)
             .update(str)
-            .update('hex');
+            .digest('hex');
         return hash;
     }
     return false;
