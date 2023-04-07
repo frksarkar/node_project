@@ -2,7 +2,7 @@
  * *Title: sample handler
  * ?Description: sample handler.
  * @author: Faruk Sarkar
- * Date: 29/March/2023
+ * *Date: 29/March/2023
  */
 
 const handler = {};

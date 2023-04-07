@@ -6,7 +6,7 @@
  */
 
 // dependencies
-const { hash } = require('../../helpers/utilities');
+const { hash, parseJSON } = require('../../helpers/utilities');
 const data = require('../../lib/data');
 
 // module scaffolding
@@ -57,7 +57,6 @@ handler._user.post = (requestProperties, callback) => {
             ? requestProperties.body.tosAgreement
             : false;
     if (firstName && lastName && phone && password && tosAgreement) {
-        // todo
         data.read('users', 'phone', (err) => {
             if (err) {
                 const userObject = {
@@ -85,7 +84,28 @@ handler._user.post = (requestProperties, callback) => {
     }
 };
 
-handler._user.get = (requestProperties, callback) => {};
+handler._user.get = (requestProperties, callback) => {
+    const phone =
+        typeof requestProperties.queryStringObject.phone === 'string' &&
+        requestProperties.queryStringObject.phone.trim().length === 11
+            ? requestProperties.queryStringObject.phone
+            : false;
+    if (phone) {
+        //
+        data.read('users', phone, (u) => {
+            const user = { ...parseJSON(u) };
+            if (user) {
+                delete user.password;
+                console.log(user);
+                callback(200, user);
+            } else {
+                callback(404, { message: 'user was not found' });
+            }
+        });
+    } else {
+        callback(404, { message: 'request user not found' });
+    }
+};
 
 handler._user.put = (requestProperties, callback) => {};
 
