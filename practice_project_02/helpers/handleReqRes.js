@@ -10,6 +10,7 @@ const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const { notFoundHandler } = require('../handler/routeHandlers/notFoundHandler');
 const routes = require('../routes');
+const { parseJSON } = require('./utilities');
 
 // handle Object - module scaffolding.
 const handler = {};
@@ -36,23 +37,26 @@ handler.handleReqRes = (req, res) => {
 
     const chosenHandler = routes[trimmedPath] ? routes[trimmedPath] : notFoundHandler;
 
-    chosenHandler(requestProperties, (statusCode, payload) => {
-        // eslint-disable-next-line no-param-reassign
-        statusCode = typeof statusCode === 'number' ? statusCode : 500;
-        // eslint-disable-next-line no-param-reassign
-        payload = typeof payload === 'object' ? payload : {};
-
-        const jsonString = JSON.stringify(payload);
-        res.writeHead(statusCode);
-        res.end(jsonString);
-    });
-
     req.on('data', (buffer) => {
         realData += decoder.write(buffer);
     });
+
     req.on('end', () => {
         realData += decoder.end();
-        console.log(realData);
+
+        requestProperties.body = parseJSON(realData);
+        chosenHandler(requestProperties, (statusCode, payload) => {
+            // eslint-disable-next-line no-param-reassign
+            statusCode = typeof statusCode === 'number' ? statusCode : 500;
+            // eslint-disable-next-line no-param-reassign
+            payload = typeof payload === 'object' ? payload : {};
+
+            const jsonString = JSON.stringify(payload);
+
+            res.setHeader('content-type', 'application/json');
+            res.writeHead(statusCode);
+            res.end(jsonString);
+        });
     });
 };
 
