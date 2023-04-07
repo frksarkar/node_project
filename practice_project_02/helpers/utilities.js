@@ -5,6 +5,10 @@
  * *Date: 06-April-2023
  */
 
+// dependencies
+const crypto = require('crypto');
+const environmentToExport = require('./environments');
+
 // module scaffolding
 const utilities = {};
 
@@ -17,6 +21,19 @@ utilities.parseJSON = (jsonString) => {
         output = {};
     }
     return output;
+};
+
+// hash string
+utilities.hash = (str) => {
+    if (typeof str === 'string' && str.length > 0) {
+        // todo
+        const hash = crypto
+            .createHash('sha256', environmentToExport.secretKey)
+            .update(str)
+            .update('hex');
+        return hash;
+    }
+    return false;
 };
 
 // exports module
