@@ -14,19 +14,23 @@ const environments = {};
 environments.development = {
     port: 3000,
     envName: 'development',
+    secretKey: 'sdklfjgliarlkjfdog',
 };
 
 // production environment
 environments.production = {
     port: 5000,
     envName: 'production',
+    secretKey: 'skdfjigwikfdgiksdf',
 };
 
 // determine which environments are passed
-const currentEnvironments =    typeof process.env.NODE_ENV === 'string' ? process.env.NODE_ENV : 'development';
+const currentEnvironments =
+    typeof process.env.NODE_ENV === 'string' ? process.env.NODE_ENV : 'development';
 
 // export corresponding environment object
-const environmentToExport =    typeof environments[currentEnvironments] === 'object'
+const environmentToExport =
+    typeof environments[currentEnvironments] === 'object'
         ? environments[currentEnvironments]
         : environments.development;
 
