@@ -54,11 +54,11 @@ lib.read = (directory, fileName, callback) => {
 
 // update data from file.
 lib.update = (directory, fileName, data, callback) => {
-    fs.open(`${lib.baseDir + directory}/${fileName}.json`, 'r+', (error, fileDescriptor) => {
+    fs.open(`${lib.baseDir + directory}/${fileName}.json`, 'w+', (error, fileDescriptor) => {
         if (!error && fileDescriptor) {
             const json = JSON.stringify(data);
-
-            fs.writeFile(fileDescriptor, json, (error1) => {
+            console.log(typeof json);
+            fs.writeFile(fileDescriptor, json, 'utf-8', (error1) => {
                 if (!error1) {
                     fs.close(fileDescriptor, (error2) => {
                         if (!error2) {

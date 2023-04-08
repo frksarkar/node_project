@@ -45,6 +45,7 @@ handler.handleReqRes = (req, res) => {
         realData += decoder.end();
 
         requestProperties.body = parseJSON(realData);
+
         chosenHandler(requestProperties, (statusCode, payload) => {
             // eslint-disable-next-line no-param-reassign
             statusCode = typeof statusCode === 'number' ? statusCode : 500;

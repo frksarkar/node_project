@@ -161,6 +161,22 @@ handler._user.put = (requestProperties, callback) => {
     }
 };
 
-handler._user.delete = (requestProperties, callback) => {};
+handler._user.delete = (requestProperties, callback) => {
+    const phone =
+        typeof requestProperties.queryStringObject.phone === 'string' &&
+        requestProperties.queryStringObject.phone.trim().length === 11
+            ? requestProperties.queryStringObject.phone
+            : false;
+
+    if (phone) {
+        data.read('users', phone, (user) => {
+            data.delete('users', phone, (message) => {
+                callback(200, { message });
+            });
+        });
+    } else {
+        callback(400, { message: 'there was a problem in you request' });
+    }
+};
 
 module.exports = handler;
