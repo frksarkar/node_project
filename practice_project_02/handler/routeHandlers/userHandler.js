@@ -24,7 +24,7 @@ handler.userHandler = (requestProperties, callback) => {
 handler._user = {};
 
 handler._user.post = (requestProperties, callback) => {
-    // body is user object
+    // body is user object server side
     const firstName =
         typeof requestProperties.body.firstName === 'string' &&
         requestProperties.body.firstName.trim().length > 0
@@ -56,6 +56,7 @@ handler._user.post = (requestProperties, callback) => {
         typeof requestProperties.body.tosAgreement === 'boolean'
             ? requestProperties.body.tosAgreement
             : false;
+
     if (firstName && lastName && phone && password && tosAgreement) {
         data.read('users', 'phone', (err) => {
             if (err) {
@@ -107,7 +108,58 @@ handler._user.get = (requestProperties, callback) => {
     }
 };
 
-handler._user.put = (requestProperties, callback) => {};
+handler._user.put = (requestProperties, callback) => {
+    const firstName =
+        typeof requestProperties.body.firstName === 'string' &&
+        requestProperties.body.firstName.trim().length > 0
+            ? requestProperties.body.firstName
+            : false;
+
+    const lastName =
+        typeof requestProperties.body.lastName === 'string' &&
+        requestProperties.body.lastName.trim().length > 0
+            ? requestProperties.body.lastName
+            : false;
+    const password =
+        typeof requestProperties.body.password === 'string' &&
+        requestProperties.body.password.trim().length > 0
+            ? requestProperties.body.password
+            : false;
+
+    const phone =
+        typeof requestProperties.body.phone === 'string' &&
+        requestProperties.body.phone.trim().length === 11
+            ? requestProperties.body.phone
+            : false;
+
+    if (phone && (firstName || lastName || password)) {
+        data.read('users', phone, (user) => {
+            if (user) {
+                const userData = { ...parseJSON(user) };
+
+                if (firstName) {
+                    userData.firstName = firstName;
+                }
+                if (lastName) {
+                    userData.lastName = lastName;
+                }
+                if (password) {
+                    userData.password = hash(password);
+                }
+
+                data.update('users', phone, userData, (err) => {
+                    if (err) {
+                        callback(200, { message: 'user update successfully' });
+                    }
+                });
+            } else {
+                callback(400, { message: 'there was a problem server-side' });
+            }
+        });
+    } else {
+        callback(400, { message: 'there was a problem server-side authentication' });
+    }
+};
 
 handler._user.delete = (requestProperties, callback) => {};
 
