@@ -62,17 +62,17 @@ lib.update = (directory, fileName, data, callback) => {
                 if (!error1) {
                     fs.close(fileDescriptor, (error2) => {
                         if (!error2) {
-                            callback('file successful open');
+                            callback('file successful update');
                         } else {
-                            callback('Error closing the file');
+                            callback(error2);
                         }
                     });
                 } else {
-                    callback('Error writing a file');
+                    callback(error1);
                 }
             });
         } else {
-            callback('Error opening file');
+            callback(error);
         }
     });
 };

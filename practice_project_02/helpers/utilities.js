@@ -43,7 +43,7 @@ utilities.createRandomToken = (strLength) => {
     const length = typeof strLength === 'number' && strLength > 0 ? strLength : false;
     if (length) {
         let token = '';
-        for (let i = 1; i < length; i += 1) {
+        for (let i = 0; i < length; i += 1) {
             token += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         return token;
