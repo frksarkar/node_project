@@ -35,5 +35,21 @@ utilities.hash = (str) => {
     return false;
 };
 
+// create random token
+
+utilities.createRandomToken = (strLength) => {
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    const length = typeof strLength === 'number' && strLength > 0 ? strLength : false;
+    if (length) {
+        let token = '';
+        for (let i = 1; i < length; i += 1) {
+            token += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return token;
+    }
+    return length;
+};
+
 // exports module
 module.exports = utilities;

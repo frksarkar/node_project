@@ -169,7 +169,7 @@ handler._user.delete = (requestProperties, callback) => {
             : false;
 
     if (phone) {
-        data.read('users', phone, (user) => {
+        data.read('users', phone, () => {
             data.delete('users', phone, (message) => {
                 callback(200, { message });
             });
