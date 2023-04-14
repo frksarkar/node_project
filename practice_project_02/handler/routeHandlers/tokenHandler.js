@@ -119,6 +119,22 @@ handler._token.put = (requestProperties, callback) => {
     }
 };
 
-handler._token.delete = (requestProperties, callback) => {};
+handler._token.delete = (requestProperties, callback) => {
+    const id =
+        typeof requestProperties.queryStringObject.id === 'string' &&
+        requestProperties.queryStringObject.id.trim().length === 20
+            ? requestProperties.queryStringObject.id
+            : false;
+
+    if (id) {
+        data.read('tokens', id, () => {
+            data.delete('tokens', id, (message) => {
+                callback(200, { message });
+            });
+        });
+    } else {
+        callback(400, { message: 'there was a problem in you request' });
+    }
+};
 
 module.exports = handler;
