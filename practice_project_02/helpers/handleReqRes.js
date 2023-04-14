@@ -23,7 +23,6 @@ handler.handleReqRes = (req, res) => {
     const method = req.method.toLowerCase();
     const queryStringObject = parseUrl.query;
     const headersObject = req.headers;
-
     const requestProperties = {
         parseUrl,
         path,

@@ -11,6 +11,7 @@ const data = require('../../lib/data');
 
 // module scaffolding
 const handler = {};
+
 handler.tokenHandler = (requestProperties, callback) => {
     const acceptedMethods = ['get', 'post', 'put', 'delete'];
     if (acceptedMethods.indexOf(requestProperties.method) > -1) {
