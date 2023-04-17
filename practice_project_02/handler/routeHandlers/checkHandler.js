@@ -6,7 +6,7 @@
  */
 
 // dependencies
-const { hash, parseJSON, createRandomToken } = require('../../helpers/utilities');
+const { parseJSON, createRandomToken } = require('../../helpers/utilities');
 const data = require('../../lib/data');
 const {
     _token: { verify },
@@ -261,33 +261,69 @@ handler._check.put = (requestProperties, callback) => {
 };
 
 handler._check.delete = (requestProperties, callback) => {
-    const phone =
-        typeof requestProperties.queryStringObject.phone === 'string' &&
-        requestProperties.queryStringObject.phone.trim().length === 11
-            ? requestProperties.queryStringObject.phone
+    const checkId =
+        typeof requestProperties.queryStringObject.checkId === 'string' &&
+        requestProperties.queryStringObject.checkId.trim().length === 20
+            ? requestProperties.queryStringObject.checkId
             : false;
 
-    if (phone) {
-        // token verify start
-        const token =
-            typeof requestProperties.headersObject.token === 'string'
-                ? requestProperties.headersObject.token
-                : false;
-        // verify function
-        verify(token, phone, (tokenId) => {
-            if (tokenId) {
-                data.read('users', phone, () => {
-                    data.delete('users', phone, (message) => {
-                        callback(200, { message });
-                    });
+    if (checkId) {
+        //
+
+        data.read('checks', checkId, (checkData) => {
+            const cData = parseJSON(checkData);
+            if (checkData) {
+                const token =
+                    typeof requestProperties.headersObject.token === 'string'
+                        ? requestProperties.headersObject.token
+                        : false;
+                verify(token, cData.userPhone, (tokenIsValid) => {
+                    if (tokenIsValid) {
+                        data.delete('checks', checkId, () => {
+                            data.read('users', cData.userPhone, (uData) => {
+                                const userData = parseJSON(uData);
+                                if (uData) {
+                                    const userChecks =
+                                        typeof userData.checks === 'object' &&
+                                        userData.checks instanceof Array
+                                            ? userData.checks
+                                            : [];
+
+                                    // remove the deleted checks id from user's list of checks
+                                    const checkPosition = userChecks.indexOf(checkId);
+                                    if (checkPosition > -1) {
+                                        userChecks.splice(checkPosition, 1);
+
+                                        userData.checks = userChecks;
+                                        data.update('users', userData.phone, userData, (err) => {
+                                            if (err) {
+                                                callback(200);
+                                            } else {
+                                                callback(500, {
+                                                    error: 'there was a server side problem',
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        callback(500, {
+                                            error: 'the check id that you are trying to remove is not found in user!',
+                                        });
+                                    }
+                                } else {
+                                    callback(500, { message: 'there was a problem server side' });
+                                }
+                            });
+                        });
+                    } else {
+                        callback(403, { error: 'authentication failed' });
+                    }
                 });
             } else {
-                callback(403, { error: 'authentication failed' });
+                callback(400, { error: 'You have a problem in your request' });
             }
         });
-        // token verify end
     } else {
-        callback(400, { message: 'there was a problem in you request' });
+        callback(404, { message: 'request id not found' });
     }
 };
 
