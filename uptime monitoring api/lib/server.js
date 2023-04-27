@@ -1,6 +1,6 @@
 /**
- * *Title: practice project node.js
- * ?Description: node.js network practice project
+ * *Title: server library
+ * ?Description: server related files
  * @author: Faruk Sarkar
  * Date: 29/03/2023
  */
@@ -24,4 +24,4 @@ app.createServer = () => {
 
 app.handleRequest = handleReqRes;
 
-app.createServer();
+module.exports = app;

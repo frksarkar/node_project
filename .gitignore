@@ -3,5 +3,5 @@ node_modules
 .vscode
 /practice_project_01
 .eslintrc.json
-/practice_project_02/helpers/environments.js
+/uptime monitoring api/helpers/environments.js
 
