@@ -4,4 +4,5 @@ node_modules
 /practice_project_01
 .eslintrc.json
 /uptime monitoring api/helpers/environments.js
+/uptime monitoring api/.data
 
