@@ -5,4 +5,4 @@ node_modules
 .eslintrc.json
 /uptime monitoring api/helpers/environments.js
 /uptime monitoring api/.data
-
+.data
